@@ -1,0 +1,33 @@
+{
+    "name": "wakeonweb/event-bus-receiver",
+    "type": "library",
+    "description": "WakeOnWeb EventBus receiver",
+    "keywords": [
+        "event-bus"
+    ],
+    "homepage": "https://bitbucket.org/wakeonweb/event-bus-receiver",
+    "license": "private",
+    "minimum-stability": "dev",
+    "require": {
+        "php": ">=7.0",
+        "prooph/service-bus": "^6.0"
+    },
+    "suggest": {
+        "bernard/bernard": "Receive message throught a queue system."
+    },
+    "autoload": {
+        "psr-4": {
+            "WakeOnWeb\\EventBusReceiver\\": "src"
+        }
+    },
+    "autoload-dev":{
+        "psr-4":{
+            "Tests\\WakeOnWeb\\SalesforceClient\\":"tests/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0-dev"
+        }
+    }
+}
