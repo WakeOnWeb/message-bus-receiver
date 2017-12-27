@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-namespace WakeOnWeb\EventBusReceiver\App\Bundle\DependencyInjection;
+namespace WakeOnWeb\MessageBusReceiver\App\Bundle\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
-use WakeOnWeb\EventBusReceiver\Infra\Message\LazyNormalizerMessageFactory;
-use WakeOnWeb\EventBusReceiver\Infra\Message\MappingMessageFactory;
-use WakeOnWeb\EventBusReceiver\Infra\Message\MessageFactoryAggregator;
-use WakeOnWeb\EventBusReceiver\Infra\Queue\BernardReceiver;
+use WakeOnWeb\MessageBusReceiver\Infra\Message\LazyNormalizerMessageFactory;
+use WakeOnWeb\MessageBusReceiver\Infra\Message\MappingMessageFactory;
+use WakeOnWeb\MessageBusReceiver\Infra\Message\MessageFactoryAggregator;
+use WakeOnWeb\MessageBusReceiver\Infra\Queue\BernardReceiver;
 
-final class WakeonwebEventBusReceiverExtension extends Extension
+final class WakeonwebMessageBusReceiverExtension extends Extension
 {
     public function load(array $configs, ContainerBuilder $container)
     {
@@ -42,7 +42,7 @@ final class WakeonwebEventBusReceiverExtension extends Extension
         ]);
         $definition->addTag('bernard.receiver', ['message' => $config['message_name']]);
 
-        $container->setDefinition('wow.event_bus_receiver.queue.bernard.receiver', $definition);
+        $container->setDefinition('wow.message_bus_receiver.queue.bernard.receiver', $definition);
     }
 
     private function loadMessageFactory(array $config, ContainerBuilder $container): void
@@ -57,6 +57,6 @@ final class WakeonwebEventBusReceiverExtension extends Extension
             $factories[] = new Definition(LazyNormalizerMessageFactory::class, [$config['normalizers'], new Reference('service_container')]);
         }
 
-        $container->setDefinition('wow.event_bus_receiver.message_factory', new Definition(MessageFactoryAggregator::class, [$factories]));
+        $container->setDefinition('wow.message_bus_receiver.message_factory', new Definition(MessageFactoryAggregator::class, [$factories]));
     }
 }

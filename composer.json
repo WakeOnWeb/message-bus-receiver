@@ -1,11 +1,11 @@
 {
-    "name": "wakeonweb/event-bus-receiver",
+    "name": "wakeonweb/message-bus-receiver",
     "type": "library",
-    "description": "WakeOnWeb EventBus receiver",
+    "description": "WakeOnWeb MessageBus receiver",
     "keywords": [
-        "event-bus"
+        "message-bus"
     ],
-    "homepage": "https://bitbucket.org/wakeonweb/event-bus-receiver",
+    "homepage": "https://bitbucket.org/wakeonweb/message-bus-receiver",
     "license": "private",
     "minimum-stability": "dev",
     "require": {
@@ -17,7 +17,7 @@
     },
     "autoload": {
         "psr-4": {
-            "WakeOnWeb\\EventBusReceiver\\": "src"
+            "WakeOnWeb\\MessageBusReceiver\\": "src"
         }
     },
     "autoload-dev":{

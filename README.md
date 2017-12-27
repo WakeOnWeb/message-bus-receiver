@@ -1,5 +1,5 @@
-WakeOnWeb EventBusReceiver
-===========================
+WakeOnWeb MessageBusReceiver
+============================
 
 Installation
 ------------

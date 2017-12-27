@@ -1,11 +1,11 @@
 <?php
 
-namespace WakeOnWeb\EventBusReceiver\Infra\Message;
+namespace WakeOnWeb\MessageBusReceiver\Infra\Message;
 
 use Prooph\Common\Messaging\FQCNMessageFactory;
 use Prooph\Common\Messaging\Message;
-use WakeOnWeb\EventBusReceiver\Domain\Message\MessageFactoryInterface;
-use WakeOnWeb\EventBusReceiver\Domain\Normalizer\NormalizerRepositoryInterface;
+use WakeOnWeb\MessageBusReceiver\Domain\Message\MessageFactoryInterface;
+use WakeOnWeb\MessageBusReceiver\Domain\Normalizer\NormalizerRepositoryInterface;
 
 class MessageFactoryAggregator extends FQCNMessageFactory
 {

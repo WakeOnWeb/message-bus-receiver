@@ -1,6 +1,6 @@
 <?php
 
-namespace WakeOnWeb\EventBusReceiver\Domain\Message;
+namespace WakeOnWeb\MessageBusReceiver\Domain\Message;
 
 use Prooph\Common\Messaging\MessageFactory;
 

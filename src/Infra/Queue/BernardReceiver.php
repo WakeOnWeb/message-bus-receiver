@@ -1,23 +1,23 @@
 <?php
 
-namespace WakeOnWeb\EventBusReceiver\Infra\Queue;
+namespace WakeOnWeb\MessageBusReceiver\Infra\Queue;
 
 use Bernard\Message\PlainMessage;
 use Prooph\Common\Messaging\MessageFactory;
-use Prooph\ServiceBus\EventBus;
-use WakeOnWeb\EventBusReceiver\Domain\Target\TargetRepositoryInterface;
+use Prooph\ServiceBus\MessageBus;
+use WakeOnWeb\MessageBusReceiver\Domain\Target\TargetRepositoryInterface;
 
 class BernardReceiver
 {
-    /** var EventBus */
-    private $eventBus;
+    /** var MessageBus */
+    private $messageBus;
 
     /** var MessageFactory */
     private $messageFactory;
 
-    public function __construct(EventBus $eventBus, MessageFactory $messageFactory)
+    public function __construct(MessageBus $messageBus, MessageFactory $messageFactory)
     {
-        $this->eventBus = $eventBus;
+        $this->messageBus = $messageBus;
         $this->messageFactory = $messageFactory;
     }
 
@@ -26,14 +26,14 @@ class BernardReceiver
      */
     public function __invoke(PlainMessage $message)
     {
-        $messageData = $message['event'];
+        $messageData = $message['message'];
 
-        $event = $this->messageFactory->createMessageFromArray(
+        $message = $this->messageFactory->createMessageFromArray(
             $messageData['message_name'],
             $messageData
         );
 
-        $this->eventBus->dispatch($event);
+        $this->messageBus->dispatch($message);
     }
 
 }
