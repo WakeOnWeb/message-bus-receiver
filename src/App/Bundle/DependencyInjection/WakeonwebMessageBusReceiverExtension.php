@@ -19,33 +19,40 @@ final class WakeonwebMessageBusReceiverExtension extends Extension
     {
         $config = $this->processConfiguration(new Configuration(), $configs);
 
-        foreach ($config['drivers'] as $driver => $driverConfig) {
-            switch ($driver) {
-                case 'amqp':
-                    $this->loadAmqpDriver($driverConfig, $container);
-                    break;
-                default:
-                    throw new \LogicException(sprintf('Unknown “%s“ driver', $driver));
-                    break;
-            }
-        }
-
-        if (array_key_exists('message_factory', $config)) {
-            $this->loadMessageFactory($config['message_factory'], $container);
+        foreach ($config['buses'] as $busName => $busConfig) {
+            $this->loadBus($busName, $busConfig, $container);
         }
     }
 
-    private function loadAmqpDriver(array $config, ContainerBuilder $container): void
+    private function loadBus(string $busName, array $busConfig, ContainerBuilder $container): void
+    {
+        foreach ($busConfig['inputs'] as $busInput => $inputConfig) {
+            switch ($busInput) {
+                case 'amqp':
+                    $this->loadAmqpInput($busName, $inputConfig, $container);
+                    break;
+                default:
+                    throw new \LogicException("Bus input $busInput not supported");
+                    break;
+            }
+
+            if (array_key_exists('message_factory', $busConfig)) {
+                $this->loadMessageFactory($busName, $busConfig['message_factory'], $container);
+            }
+        }
+    }
+
+    private function loadAmqpInput(string $busName, array $config, ContainerBuilder $container): void
     {
         $definition = new Definition(BernardReceiver::class, [
-            new Reference(sprintf('prooph_service_bus.%s', $config['prooph_bus'])), new Reference(sprintf('prooph_service_bus.message_factory.%s', $config['prooph_bus'])),
+            new Reference("prooph_service_bus.$busName"), new Reference("prooph_service_bus.message_factory.$busName"),
         ]);
         $definition->addTag('bernard.receiver', ['message' => $config['message_name']]);
 
-        $container->setDefinition('wow.message_bus_receiver.queue.bernard.receiver', $definition);
+        $container->setDefinition("wow.message_bus_receiver.$busName.queue.bernard.receiver", $definition);
     }
 
-    private function loadMessageFactory(array $config, ContainerBuilder $container): void
+    private function loadMessageFactory(string $busName, array $config, ContainerBuilder $container): void
     {
         $factories = [];
 
@@ -57,6 +64,6 @@ final class WakeonwebMessageBusReceiverExtension extends Extension
             $factories[] = new Definition(LazyNormalizerMessageFactory::class, [$config['normalizers'], new Reference('service_container')]);
         }
 
-        $container->setDefinition('wow.message_bus_receiver.message_factory', new Definition(MessageFactoryAggregator::class, [$factories]));
+        $container->setDefinition("wow.message_bus_receiver.$busName.message_factory", new Definition(MessageFactoryAggregator::class, [$factories]));
     }
 }
