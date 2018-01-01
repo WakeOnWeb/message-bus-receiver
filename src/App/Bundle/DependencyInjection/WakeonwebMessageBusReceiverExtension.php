@@ -48,6 +48,7 @@ final class WakeonwebMessageBusReceiverExtension extends Extension
             new Reference("prooph_service_bus.$busName"), new Reference("prooph_service_bus.message_factory.$busName"),
         ]);
         $definition->addTag('bernard.receiver', ['message' => $config['message_name']]);
+        $definition->setPublic(true);
 
         $container->setDefinition("wow.message_bus_receiver.$busName.queue.bernard.receiver", $definition);
     }
@@ -64,6 +65,9 @@ final class WakeonwebMessageBusReceiverExtension extends Extension
             $factories[] = new Definition(LazyNormalizerMessageFactory::class, [$config['normalizers'], new Reference('service_container')]);
         }
 
-        $container->setDefinition("wow.message_bus_receiver.$busName.message_factory", new Definition(MessageFactoryAggregator::class, [$factories]));
+        $definition = new Definition(MessageFactoryAggregator::class, [$factories]);
+        $definition->setPublic(true);
+
+        $container->setDefinition("wow.message_bus_receiver.$busName.message_factory", $definition);
     }
 }
