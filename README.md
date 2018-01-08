@@ -7,7 +7,7 @@ Installation
 `composer.json`
 
 ```
-    "wakeonweb/message-bus-receiver": "^1.0@dev"
+    "wakeonweb/message-bus-receiver": "^0.1"
 ```
 
 If you use **Symfony**, you can load the bundle `WakeOnWeb\MessageBusReceiver\App\Bundle\WakeonwebMessageBusReceiverBundle`.
