@@ -19,8 +19,8 @@ final class WakeonwebMessageBusReceiverExtension extends Extension
     {
         $config = $this->processConfiguration(new Configuration(), $configs);
 
-        foreach ($config['buses'] as $busName => $busConfig) {
-            $this->loadBus($busName, $busConfig, $container);
+        foreach ($config['buses'] as $busConfig) {
+            $this->loadBus($busConfig['bus'], $busConfig, $container);
         }
     }
 
@@ -55,19 +55,9 @@ final class WakeonwebMessageBusReceiverExtension extends Extension
 
     private function loadMessageFactory(string $busName, array $config, ContainerBuilder $container): void
     {
-        $factories = [];
-
-        if (false === empty($config['mapping'])) {
-            $factories[] = new Definition(MappingMessageFactory::class, [$config['mapping']]);
-        }
-
-        if (false === empty($config['normalizers'])) {
-            $factories[] = new Definition(LazyNormalizerMessageFactory::class, [$config['normalizers'], new Reference('service_container')]);
-        }
-
-        $definition = new Definition(MessageFactoryAggregator::class, [$factories]);
-        $definition->setPublic(true);
-
-        $container->setDefinition("wow.message_bus_receiver.$busName.message_factory", $definition);
+        $container->setDefinition(
+            "wow.message_bus_receiver.$busName.message_factory",
+            new Definition(MappingMessageFactory::class, [$config['mapping'], new Reference('service_container')])
+        );
     }
 }

@@ -19,8 +19,20 @@ final class Configuration implements ConfigurationInterface
         $treeBuilder->root('wakeonweb_message_bus_receiver')
             ->children()
                 ->arrayNode('buses')
+                    ->beforeNormalization()
+                        ->always(function($v) {
+                            foreach ($v as $busName => $busConfig) {
+                                if (false === array_key_exists('bus', $busConfig)) {
+                                    $v[$busName]['bus'] = $busName;
+                                }
+                            }
+
+                            return $v;
+                        })
+                    ->end()
                     ->prototype('array')
                         ->children()
+                            ->scalarNode('bus')->isRequired()->end()
                             ->arrayNode('inputs')
                                 ->isRequired()
                                 ->children()
@@ -43,10 +55,6 @@ final class Configuration implements ConfigurationInterface
                                 ->end()
                                 ->children()
                                     ->arrayNode('mapping')
-                                        ->prototype('scalar')
-                                        ->end()
-                                    ->end()
-                                    ->arrayNode('normalizers')
                                         ->prototype('scalar')
                                         ->end()
                                     ->end()
