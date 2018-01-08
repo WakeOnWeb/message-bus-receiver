@@ -8,9 +8,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
-use WakeOnWeb\MessageBusReceiver\Infra\Message\LazyNormalizerMessageFactory;
 use WakeOnWeb\MessageBusReceiver\Infra\Message\MappingMessageFactory;
-use WakeOnWeb\MessageBusReceiver\Infra\Message\MessageFactoryAggregator;
 use WakeOnWeb\MessageBusReceiver\Infra\Queue\BernardReceiver;
 
 final class WakeonwebMessageBusReceiverExtension extends Extension
