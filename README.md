@@ -4,19 +4,6 @@ WakeOnWeb MessageBusReceiver
 Installation
 ------------
 
-This repository is currently private, so you have to add it to your repositories:
-
-`composer.json`
-
-```
-    "repositories": [
-        {
-            "type": "vcs",
-            "url":  "git@bitbucket.org:wakeonweb/message-bus-receiver.git"
-        }
-    ],
-```
-
 `composer.json`
 
 ```
