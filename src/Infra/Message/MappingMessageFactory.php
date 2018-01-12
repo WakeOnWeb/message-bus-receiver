@@ -6,7 +6,6 @@ use Prooph\Common\Messaging\FQCNMessageFactory;
 use Prooph\Common\Messaging\Message;
 use Psr\Container\ContainerInterface;
 use Prooph\Common\Messaging\MessageFactory;
-use WakeOnWeb\MessageBusReceiver\Domain\Message\MessageFactoryInterface;
 
 class MappingMessageFactory extends FQCNMessageFactory implements MessageFactory
 {
@@ -30,7 +29,7 @@ class MappingMessageFactory extends FQCNMessageFactory implements MessageFactory
         $messageName = $this->mapping[$messageName];
 
         // this is a service.
-        if (strpos($messageName, '@') === 0) {
+        if (0 === strpos($messageName, '@')) {
             return $this->container
                 ->get(substr($messageName, 1))
                 ->createMessageFromArray($messageName, $messageData);

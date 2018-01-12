@@ -5,9 +5,10 @@ namespace WakeOnWeb\MessageBusReceiver\App\Bundle;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
- * WakeonwebMessageBusReceiver
+ * WakeonwebMessageBusReceiver.
  *
- * @uses Bundle
+ * @uses \Bundle
+ *
  * @author Stephane PY <s.py@wakeonweb.com>
  */
 class WakeonwebMessageBusReceiverBundle extends Bundle

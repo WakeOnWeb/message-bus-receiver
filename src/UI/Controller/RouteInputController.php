@@ -1,12 +1,14 @@
 <?php
 
-namespace WakeOnWeb\MessageBusReceiver\Infra\Queue;
+namespace WakeOnWeb\MessageBusReceiver\UI\Controller;
 
-use Bernard\Message\PlainMessage;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Prooph\Common\Messaging\MessageFactory;
 use Prooph\ServiceBus\MessageBus;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
-class BernardReceiver
+class RouteInputController
 {
     /** var MessageBus */
     private $messageBus;
@@ -20,12 +22,14 @@ class BernardReceiver
         $this->messageFactory = $messageFactory;
     }
 
-    /**
-     * @param PlainMessage $message
-     */
-    public function __invoke(PlainMessage $message)
+    public function indexAction(Request $request)
     {
-        $messageData = $message['message'];
+        $content = $request->getContent();
+        $messageData = json_decode($content, true);
+
+        if (false === is_array($messageData)) {
+            throw new BadRequestHttpException("Cannot unserialize content $content");
+        }
 
         $message = $this->messageFactory->createMessageFromArray(
             $messageData['message_name'],
@@ -33,5 +37,7 @@ class BernardReceiver
         );
 
         $this->messageBus->dispatch($message);
+
+        return new Response('', Response::HTTP_NO_CONTENT);
     }
 }

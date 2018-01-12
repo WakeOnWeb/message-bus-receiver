@@ -1,8 +1,6 @@
-WakeOnWeb MessageBusReceiver
-============================
+# WakeOnWeb MessageBusReceiver
 
-Installation
-------------
+## Installation
 
 `composer.json`
 
@@ -12,16 +10,16 @@ Installation
 
 If you use **Symfony**, you can load the bundle `WakeOnWeb\MessageBusReceiver\App\Bundle\WakeonwebMessageBusReceiverBundle`.
 
-Usage
------
+## Usage
 
-Example using Symfony bundle:
+
+### Amqp Input
 
 ```
 wakeonweb_message_bus_receiver:
     buses:
         my_event_bus:
-            bus: async_external_incoming_event_bus
+            bus: my_event_bus
             inputs:
                 amqp:
                     message_name: EventBusExternalMessage
@@ -31,5 +29,40 @@ wakeonweb_message_bus_receiver:
                     foo: @id_service
 ```
 
+Then in your prooph event bus definition:
+
+```
+prooph_service_bus:
+  event_buses:
+    my_event_bus:
+        message_factory: wow.message_bus_receiver.my_event_bus.message_factory
+```
+
 Define the bus where messages will be trigerred once catched.
-You must define the inputs (amqp/http/...) and a mapping to normalizer messages, you can define a static KV mapping or use a service.
+
+### Controller Route Input
+
+```
+wakeonweb_message_bus_receiver:
+    buses:
+        my_event_bus:
+            bus: my_event_bus
+            inputs:
+                controller_route: ~
+            message_factory:
+                mapping:
+                    user_created: App\Event\UserCreatedEvent
+                    foo: @id_service
+```
+
+Then in your routing:
+
+```
+my_incoming_events:
+    path: /incoming/events
+    defaults: { _controller: 'wakeonweb.message_bus_receiver.my_event_bus.route_input:indexAction' }
+    methods: [POST]
+```
+
+/!\ Supports only json body at this moment /!\
+
