@@ -27,8 +27,9 @@ class RouteInputController
         $content = $request->getContent();
         $messageData = json_decode($content, true);
 
-        if (false === is_array($messageData)) {
-            throw new BadRequestHttpException("Cannot unserialize content $content");
+        $lastError = json_last_error();
+        if (0 !== $lastError || false === is_array($messageData)) {
+            throw new BadRequestHttpException("Cannot unserialize content $content, json_last_error returned : $lastError");
         }
 
         $message = $this->messageFactory->createMessageFromArray(
