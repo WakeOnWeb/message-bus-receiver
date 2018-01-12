@@ -10,6 +10,7 @@ use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use WakeOnWeb\MessageBusReceiver\Infra\Message\MappingMessageFactory;
 use WakeOnWeb\MessageBusReceiver\Infra\Queue\BernardReceiver;
+use WakeOnWeb\MessageBusReceiver\UI\Controller\RouteInputController;
 
 final class WakeonwebMessageBusReceiverExtension extends Extension
 {
@@ -28,6 +29,16 @@ final class WakeonwebMessageBusReceiverExtension extends Extension
             switch ($busInput) {
                 case 'amqp':
                     $this->loadAmqpInput($busName, $inputConfig, $container);
+                    break;
+                case 'controller_route':
+                    $definition = new Definition(RouteInputController::class, [
+                        new Reference("prooph_service_bus.$busName"),
+                        new Reference("prooph_service_bus.message_factory.$busName"),
+                    ]);
+                    $definition->setPublic(true);
+
+                    $container->setDefinition("wakeonweb.message_bus_receiver.$busName.route_input", $definition);
+
                     break;
                 default:
                     throw new \LogicException("Bus input $busInput not supported");

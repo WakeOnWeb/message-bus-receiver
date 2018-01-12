@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace WakeOnWeb\MessageBusReceiver\App\Bundle\DependencyInjection;
 
-use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
@@ -20,7 +19,7 @@ final class Configuration implements ConfigurationInterface
             ->children()
                 ->arrayNode('buses')
                     ->beforeNormalization()
-                        ->always(function($v) {
+                        ->always(function ($v) {
                             foreach ($v as $busName => $busConfig) {
                                 if (false === array_key_exists('bus', $busConfig)) {
                                     $v[$busName]['bus'] = $busName;
@@ -36,6 +35,7 @@ final class Configuration implements ConfigurationInterface
                             ->arrayNode('inputs')
                                 ->isRequired()
                                 ->children()
+                                    ->scalarNode('controller_route')->end()
                                     ->arrayNode('amqp')
                                         ->children()
                                             ->scalarNode('message_name')->isRequired()->end()
