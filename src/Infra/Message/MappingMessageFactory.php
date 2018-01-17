@@ -35,8 +35,6 @@ class MappingMessageFactory extends FQCNMessageFactory implements MessageFactory
                 ->createMessageFromArray($messageName, $messageData);
         }
 
-        unset($messageData['message_name']);
-
         if (is_array($messageData['created_at'])) {
             $messageData['created_at'] = $this->createDateTimeImmutableFromArray($messageData['created_at']);
         }
