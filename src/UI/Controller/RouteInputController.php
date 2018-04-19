@@ -2,11 +2,13 @@
 
 namespace WakeOnWeb\MessageBusReceiver\UI\Controller;
 
+use Prooph\Common\Messaging\MessageFactory;
+use Prooph\ServiceBus\Exception\MessageDispatchException;
+use Prooph\ServiceBus\MessageBus;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Prooph\Common\Messaging\MessageFactory;
-use Prooph\ServiceBus\MessageBus;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use WakeOnWeb\MessageBusReceiver\Domain\Exception\InvalidMessageContentException;
 
 class RouteInputController
 {
@@ -36,7 +38,15 @@ class RouteInputController
             $messageData
         );
 
-        $this->messageBus->dispatch($message);
+        try {
+            $this->messageBus->dispatch($message);
+        } catch (MessageDispatchException $e) {
+            if ($e->getPrevious() instanceof InvalidMessageContentException) {
+                throw new BadRequestHttpException($e->getPrevious()->getMessage());
+            }
+
+            throw $e;
+        }
 
         return new Response('', Response::HTTP_NO_CONTENT);
     }
