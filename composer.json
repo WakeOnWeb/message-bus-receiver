@@ -6,7 +6,7 @@
         "message-bus"
     ],
     "homepage": "https://github.com/wakeonweb/message-bus-receiver",
-    "license": "private",
+    "license": "MIT",
     "minimum-stability": "dev",
     "require": {
         "php": ">=7.0",
