@@ -22,11 +22,11 @@ class MappingMessageFactory extends FQCNMessageFactory implements MessageFactory
 
     public function createMessageFromArray(string $messageName, array $messageData): Message
     {
-        if (false === array_key_exists($messageName, $this->mapping)) {
+        if (false === array_key_exists($messageName, $this->mapping) && false === array_key_exists('*', $this->mapping)) {
             return parent::createMessageFromArray($messageName, $messageData);
         }
 
-        $messageName = $this->mapping[$messageName];
+        $messageName = array_key_exists($messageName, $this->mapping) ? $this->mapping[$messageName] : $this->mapping['*'];
 
         // this is a service.
         if (0 === strpos($messageName, '@')) {
