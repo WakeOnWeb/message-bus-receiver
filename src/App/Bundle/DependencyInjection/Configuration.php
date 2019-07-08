@@ -39,6 +39,7 @@ final class Configuration implements ConfigurationInterface
                                     ->arrayNode('amqp')
                                         ->children()
                                             ->scalarNode('message_name')->isRequired()->end()
+                                            ->booleanNode('move_to_error_queue_on_error')->defaultFalse()->end()
                                         ->end()
                                     ->end()
                                 ->end()

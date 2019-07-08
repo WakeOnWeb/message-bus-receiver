@@ -23,6 +23,7 @@ wakeonweb_message_bus_receiver:
             inputs:
                 amqp:
                     message_name: EventBusExternalMessage
+                    move_to_error_queue_on_error: false
             message_factory:
                 mapping:
                     user_created: App\Event\UserCreatedEvent

@@ -10,6 +10,7 @@ use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use WakeOnWeb\MessageBusReceiver\Infra\Message\MappingMessageFactory;
 use WakeOnWeb\MessageBusReceiver\Infra\Queue\BernardReceiver;
+use WakeOnWeb\MessageBusReceiver\Infra\Queue\RejectListener;
 use WakeOnWeb\MessageBusReceiver\UI\Controller\RouteInputController;
 
 final class WakeonwebMessageBusReceiverExtension extends Extension
@@ -60,6 +61,15 @@ final class WakeonwebMessageBusReceiverExtension extends Extension
         $definition->setPublic(true);
 
         $container->setDefinition("wow.message_bus_receiver.$busName.queue.bernard.receiver", $definition);
+
+        if ($config['move_to_error_queue_on_error']) {
+            $definition = new Definition(RejectListener::class, [new Reference('bernard.queue_factory')]);
+            $definition->addTag('kernel.event_subscriber');
+            $definition->setPublic(true);
+
+            $container->setDefinition("wow.message_bus_receiver.$busName.reject_listener", $definition);
+        }
+
     }
 
     private function loadMessageFactory(string $busName, array $config, ContainerBuilder $container): void
